@@ -60,6 +60,9 @@ namespace CSharp.FsCheck
                 from identification in Any.GeneratorIn<int?>(nullableGen, Any.Value<int?>(null))
                 from subscriber in Any.IntBetween(1, 99999999)
                 select new GeneratedValidNumber(country, identification, subscriber);
+
+            Console.WriteLine(string.Join(",", numberGen.Select(x=>x.Country)));
+            
             return numberGen;
         }
 
@@ -73,7 +76,7 @@ namespace CSharp.FsCheck
                     var cc = country.Item;
                     PhoneNumber ph;
                     var ec = PhoneNumber.TryParse("+" + cc.ToString() + " 1234 123456", out ph);
-                    return ph.CountryCode < 1000;
+                    return !ec || ph.CountryCode < 1000;
                 })
                 .QuickCheckThrowOnFailure();
         }
